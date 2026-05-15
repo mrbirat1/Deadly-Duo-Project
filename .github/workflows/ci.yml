@@ -1,0 +1,34 @@
+name: Parks Explorer CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, park-data, display-feature ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Run Automated Tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Run tests with pytest
+        run: |
+          pytest test_parks_explorer.py -v
+
+      - name: Show test summary
+        if: always()
+        run: echo "CI/CD Pipeline completed by Team Deadly Duo"
