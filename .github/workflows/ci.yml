@@ -1,34 +1,43 @@
-name: Parks Explorer CI/CD Pipeline
+# GitHub Actions CI/CD Pipeline
+# Team: Deadly Duo - Parks and National Parks Explorer
+# Author: Anup Kharel (Scrum Leader & Developer)
+# Branch: display-feature
+#
+# Automatically runs all tests on every push or pull request to main.
+
+name: Parks Explorer CI Pipeline
 
 on:
   push:
-    branches: [ main, park-data, display-feature ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  test:
+  run-tests:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
-    name: Run Automated Tests
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install -r requirements.txt
 
       - name: Run tests with pytest
         run: |
           pytest test_parks_explorer.py -v
 
-      - name: Show test summary
+      - name: Test Summary
         if: always()
-        run: echo "CI/CD Pipeline completed by Team Deadly Duo"
+        run: echo "All tests completed. Check logs above for results."
