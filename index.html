@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parks Explorer — Team Deadly Duo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #0a2e1a;
+    --green-mid: #1a5c35;
+    --green-bright: #2ecc71;
+    --green-light: #e8f5ee;
+    --sand: #f7f3ed;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --white: #ffffff;
+    --card-radius: 18px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85') center/cover no-repeat;
+    transform: scale(1.05);
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes slowZoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,46,26,0.5) 0%, rgba(10,46,26,0.75) 60%, rgba(10,46,26,0.95) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 1.5rem;
+    max-width: 750px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.2);
+    border: 1px solid rgba(46,204,113,0.5);
+    color: #7fffc4;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 30px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 7vw, 72px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--green-bright); }
+
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 2rem;
+    font-weight: 300;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-search {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-search input {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 50px;
+    border: none;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    background: rgba(255,255,255,0.95);
+    color: var(--text);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .hero-search button {
+    padding: 14px 28px;
+    border-radius: 50px;
+    border: none;
+    background: var(--green-bright);
+    color: #fff;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(46,204,113,0.3);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .hero-search button:hover { background: #27ae60; transform: translateY(-1px); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+  }
+
+  .scroll-dot {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s, backdrop-filter 0.3s;
+  }
+
+  nav.scrolled {
+    background: rgba(10,46,26,0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo-icon {
+    width: 34px; height: 34px;
+    background: var(--green-bright);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main { padding: 0 1.5rem 4rem; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    gap: 1px;
+    background: var(--green-dark);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    margin: -3rem 0 3rem;
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  }
+
+  .stat-item {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    background: var(--green-dark);
+    text-align: center;
+  }
+
+  .stat-item:hover { background: #0d3d24; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--green-bright);
+    display: block;
+  }
+
+  .stat-lbl {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── SECTION ── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-tag {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--green-mid);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── FILTERS ── */
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-pill {
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 1.5px solid #c8ddd0;
+    background: #fff;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 400;
+  }
+
+  .filter-pill:hover { border-color: var(--green-mid); color: var(--green-mid); }
+  .filter-pill.active { background: var(--green-dark); border-color: var(--green-dark); color: #fff; font-weight: 500; }
+
+  /* ── PARKS GRID ── */
+  .parks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .park-card {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    background: #fff;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    animation: cardIn 0.5s ease both;
+  }
+
+  .park-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-img-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .card-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .park-card:hover .card-img-wrap img { transform: scale(1.07); }
+
+  .card-country {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(10,46,26,0.85);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(4px);
+  }
+
+  .card-year {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    background: var(--green-bright);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .card-body { padding: 1.2rem; }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .card-loc {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+
+  .act-chip {
+    background: var(--green-light);
+    color: var(--green-mid);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .card-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--green-dark);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+
+  .card-btn:hover { background: var(--green-mid); }
+
+  /* ── DETAIL PAGE ── */
+  .detail-page {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeUp 0.35s ease both;
+  }
+
+  .detail-page.active { display: block; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-dark);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: background 0.2s;
+  }
+
+  .back-btn:hover { background: var(--green-mid); }
+
+  .detail-hero {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    height: 400px;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .detail-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .detail-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,46,26,0.9) 0%, transparent 55%);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+  }
+
+  .detail-hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 42px);
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .detail-hero-text p {
+    color: rgba(255,255,255,0.75);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .detail-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .d-stat {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .d-stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--green-dark);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .d-stat-lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .detail-body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+  }
+
+  .detail-main, .detail-side { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .detail-card {
+    background: #fff;
+    border-radius: var(--card-radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .detail-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--green-light);
+  }
+
+  .detail-card p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .facts-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .fact-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 14px;
+    background: var(--green-light);
+    border-radius: 10px;
+  }
+
+  .fact-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .fact-text { font-size: 13px; color: var(--green-dark); line-height: 1.5; }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .act-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--green-light);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--green-dark);
+    font-weight: 500;
+  }
+
+  .act-icon { font-size: 16px; }
+
+  .ask-card {
+    background: var(--green-dark);
+    border-radius: var(--card-radius);
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .ask-card h3 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 0.5rem;
+  }
+
+  .ask-card p {
+    color: rgba(255,255,255,0.65);
+    font-size: 13px;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .ask-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--green-bright);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .ask-btn:hover { background: #27ae60; transform: translateY(-1px); }
+
+  .related-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .related-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+
+  .related-item:hover { background: var(--green-light); }
+
+  .related-img {
+    width: 56px; height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .related-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green-dark);
+    margin-bottom: 3px;
+  }
+
+  .related-loc { font-size: 11px; color: var(--text-muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--green-dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2rem;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  footer strong { color: var(--green-bright); }
+
+  .no-results {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+    grid-column: 1/-1;
+  }
+
+  .no-results .emoji { font-size: 40px; margin-bottom: 1rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .detail-body { grid-template-columns: 1fr; }
+    .detail-stats { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { flex-direction: column; gap: 1px; }
+    .hero-search { flex-direction: column; }
+    .detail-hero { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="#" onclick="showList()">
+    <div class="nav-logo-icon">🌿</div>
+    Parks Explorer
+  </a>
+  <span style="color:rgba(255,255,255,0.5);font-size:13px;">Team Deadly Duo</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌍 Team Deadly Duo · Birat & Anup</div>
+    <h1>Explore the World's Most Beautiful <span>National Parks</span></h1>
+    <p>Discover stunning parks across Australia, USA, New Zealand and Canada — tap any park to learn more.</p>
+    <div class="hero-search">
+      <input type="text" id="search-input" placeholder="Search parks, countries, activities..." oninput="applyFilters()">
+      <button onclick="scrollToParks()">Explore Parks ↓</button>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="scrollToParks()">
+    <div class="scroll-dot"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main" id="main-content">
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num">8</span>
+      <span class="stat-lbl">Parks</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4</span>
+      <span class="stat-lbl">Countries</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">9</span>
+      <span class="stat-lbl">Activities</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">5M+</span>
+      <span class="stat-lbl">Hectares</span>
+    </div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="list-view">
+    <div class="section-header" id="parks-section">
+      <div class="section-tag">✦ Discover</div>
+      <h2>Parks & National Parks</h2>
+      <p>From the ancient rainforests of Australia to the geysers of Yellowstone — every park has a story worth exploring.</p>
+    </div>
+
+    <div class="filters">
+      <span class="filter-pill active" onclick="setActivity('all',this)">All Parks</span>
+      <span class="filter-pill" onclick="setActivity('hiking',this)">🥾 Hiking</span>
+      <span class="filter-pill" onclick="setActivity('camping',this)">⛺ Camping</span>
+      <span class="filter-pill" onclick="setActivity('wildlife watching',this)">🦁 Wildlife</span>
+      <span class="filter-pill" onclick="setActivity('rock climbing',this)">🧗 Rock Climbing</span>
+      <span class="filter-pill" onclick="setActivity('skiing',this)">⛷️ Skiing</span>
+      <span class="filter-pill" onclick="setActivity('swimming',this)">🏊 Swimming</span>
+      <span class="filter-pill" onclick="setActivity('kayaking',this)">🛶 Kayaking</span>
+    </div>
+
+    <div class="parks-grid" id="parks-grid"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="detail-page" id="detail-view">
+    <button class="back-btn" onclick="showList()">← Back to all parks</button>
+    <div id="detail-content"></div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>Parks & National Parks Explorer</strong><br>
+  Built by Team Deadly Duo — Birat Sapkota & Anup Kharel<br>
+  
+</footer>
+
+<script>
+const PARKS = [
+  {
+    name:"Royal National Park", location:"New South Wales, Australia", country:"Australia",
+    established:"1879", area:"16,000 ha", activities:["hiking","camping","sightseeing","swimming"],
+    img:"https://www.sydney.com/sites/sydney/files/styles/open_graph/public/2022-03/174784.jpg?itok=gbgz9lTc",
+    thumb:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=60",
+    description:"The world's second oldest national park, featuring coastal walks, stunning beaches, and lush rainforest. Declared in 1879, it was the first national park in Australia and one of the oldest in the world. The park spans rugged coastline, secluded beaches, and dense bushland just 30km south of Sydney.",
+    facts:["Second oldest national park in the world, established 1879","Features 26km of spectacular coastline and hidden beaches","Home to lyrebirds, wallabies, and over 240 bird species"],
+    actIcons:{"hiking":"🥾","camping":"⛺","sightseeing":"🔭","swimming":"🏊"}
+  },
+  {
+    name:"Blue Mountains National Park", location:"New South Wales, Australia", country:"Australia",
+    established:"1959", area:"267,953 ha", activities:["hiking","sightseeing","camping","rock climbing"],
+    img:"https://upload.wikimedia.org/wikipedia/commons/3/35/Australia_-_Part_3_%2827446932621%29.jpg",
+    thumb:"https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=60",
+    description:"Famous for the iconic Three Sisters rock formation and sweeping valleys of eucalyptus forest. A UNESCO World Heritage Site recognised for its outstanding universal value and unique geology. The haunting blue haze that gives the mountains their name comes from fine droplets of eucalyptus oil evaporating from the dense forest.",
+    facts:["UNESCO World Heritage Site since 2000","Named for the blue haze produced by eucalyptus oil","The Three Sisters stand 922m above the Jamison Valley"],
+    actIcons:{"hiking":"🥾","sightseeing":"🔭","camping":"⛺","rock climbing":"🧗"}
+  },
+  {
+    name:"Yellowstone National Park", location:"Wyoming, USA", country:"USA",
+    established:"1872", area:"898,318 ha", activities:["hiking","camping","sightseeing","wildlife watching"],
+    img:"https://enjoyyourparks.com/wp-content/uploads/2021/02/YELLOWSTONE-PARK-HOME-PAGE.jpg",
+    thumb:"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200&q=60",
+    description:"America's first national park, sitting atop one of the world's largest supervolcanoes. Known for Old Faithful geyser, vibrant hot springs, and extraordinary wildlife including bison herds, grey wolves, and grizzly bears. More than half the world's active geothermal features are found here.",
+    facts:["America's first national park, established 1872","Home to over half the world's geothermal features","Old Faithful erupts predictably every 44–125 minutes"],
+    actIcons:{"hiking":"🥾","camping":"⛺","sightseeing":"🔭","wildlife watching":"🦁"}
+  },
+  {
+    name:"Yosemite National Park", location:"California, USA", country:"USA",
+    established:"1890", area:"308,000 ha", activities:["hiking","camping","rock climbing","sightseeing"],
+    img:"https://cdn.history.com/sites/2/2015/09/iStock_000054997610_Large.jpg",
+    thumb:"https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=200&q=60",
+    description:"Known for towering granite cliffs, cascading waterfalls, and groves of ancient giant sequoias. El Capitan and Half Dome are world-famous among rock climbers, while Yosemite Falls is the tallest waterfall in North America at 739 metres. The valley was carved by glaciers during the ice age.",
+    facts:["El Capitan rises an incredible 914m above the valley floor","Yosemite Falls drops 739m — tallest in North America","Home to 500+ species of animals including black bears"],
+    actIcons:{"hiking":"🥾","camping":"⛺","rock climbing":"🧗","sightseeing":"🔭"}
+  },
+  {
+    name:"Fiordland National Park", location:"South Island, New Zealand", country:"New Zealand",
+    established:"1952", area:"1,260,000 ha", activities:["hiking","kayaking","sightseeing","wildlife watching"],
+    img:"https://tse4.mm.bing.net/th/id/OIP.HRwyOmS338T311fJCyVi1wHaE8?w=1024&h=683&rs=1&pid=ImgDetMain&o=7&rm=3",
+    thumb:"https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=200&q=60",
+    description:"Home to the world-famous Milford Sound and Doubtful Sound, with dramatic fiords carved by ancient glaciers over millions of years. This UNESCO site is one of New Zealand's wettest places, receiving up to 6,400mm of rain annually, which feeds hundreds of temporary waterfalls cascading down sheer cliff faces.",
+    facts:["One of the largest national parks in the world","Milford Sound receives 6,400mm of rainfall per year","Rare kākāpō — the world's heaviest parrot — lives here"],
+    actIcons:{"hiking":"🥾","kayaking":"🛶","sightseeing":"🔭","wildlife watching":"🦁"}
+  },
+  {
+    name:"Banff National Park", location:"Alberta, Canada", country:"Canada",
+    established:"1885", area:"664,800 ha", activities:["hiking","camping","skiing","sightseeing"],
+    img:"https://banffnationalpark.com/wp-content/uploads/2009/06/pexels-photo-417074-1024x690.jpeg",
+    thumb:"https://images.unsplash.com/photo-1530968831187-a937a8b2a7e8?w=200&q=60",
+    description:"Canada's oldest national park, featuring impossibly turquoise glacial lakes, vast glaciers, and soaring Rocky Mountain peaks. Lake Louise and Moraine Lake draw millions of visitors each year with waters coloured by glacial rock flour. The park sits within the Canadian Rocky Mountain Parks UNESCO World Heritage Site.",
+    facts:["Canada's first national park, established 1885","Lake Louise sits at an elevation of 1,731m above sea level","Part of the largest dark sky preserve in the world"],
+    actIcons:{"hiking":"🥾","camping":"⛺","skiing":"⛷️","sightseeing":"🔭"}
+  },
+  {
+    name:"Kakadu National Park", location:"Northern Territory, Australia", country:"Australia",
+    established:"1979", area:"1,980,400 ha", activities:["hiking","sightseeing","wildlife watching","camping"],
+    img:"https://www.australiangeographic.com.au/wp-content/uploads/2018/06/kakadu-national-park_14.jpg",
+    thumb:"https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=60",
+    description:"A dual UNESCO World Heritage Site — listed for both its extraordinary natural values and its deep cultural significance to the Aboriginal people who have lived here for over 65,000 years. Features ancient rock art galleries, dramatic escarpments, and incredible biodiversity including saltwater crocodiles.",
+    facts:["Listed for both natural AND cultural heritage — rare dual status","Rock art sites dating back over 20,000 years","Home to one-third of all bird species found in Australia"],
+    actIcons:{"hiking":"🥾","sightseeing":"🔭","wildlife watching":"🦁","camping":"⛺"}
+  },
+  {
+    name:"Grand Canyon National Park", location:"Arizona, USA", country:"USA",
+    established:"1919", area:"493,000 ha", activities:["hiking","sightseeing","camping","rafting"],
+    img:"https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=800&q=80",
+    thumb:"https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=200&q=60",
+    description:"One of the world's greatest natural wonders, the Grand Canyon stretches 446km long, up to 29km wide, and plunges 1,600m deep. The Colorado River carved this geological masterpiece over 5–6 million years, exposing rock layers that tell the story of nearly 2 billion years of Earth's history.",
+    facts:["1,600m deep at its deepest point — deeper than any skyscraper is tall","The Colorado River carved it over 5–6 million years","Exposed rock spans nearly 2 billion years of Earth's history"],
+    actIcons:{"hiking":"🥾","sightseeing":"🔭","camping":"⛺","rafting":"🚣"}
+  }
+];
+
+let currentActivity = 'all';
+
+function scrollToParks() {
+  document.getElementById('parks-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function setActivity(act, el) {
+  currentActivity = act;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const kw = document.getElementById('search-input').value.toLowerCase();
+  const filtered = PARKS.filter(p => {
+    const matchAct = currentActivity === 'all' || p.activities.includes(currentActivity);
+    const matchKw = !kw || p.name.toLowerCase().includes(kw) || p.location.toLowerCase().includes(kw) || p.description.toLowerCase().includes(kw) || p.activities.some(a => a.includes(kw));
+    return matchAct && matchKw;
+  });
+  renderGrid(filtered);
+}
+
+function renderGrid(parks) {
+  const grid = document.getElementById('parks-grid');
+  if (!parks.length) {
+    grid.innerHTML = '<div class="no-results"><div class="emoji">🌿</div><p>No parks found. Try a different search or filter.</p></div>';
+    return;
+  }
+  grid.innerHTML = parks.map((p,i) => `
+    <div class="park-card" style="animation-delay:${i*0.07}s" onclick="showDetail(${PARKS.indexOf(p)})">
+      <div class="card-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy">
+        <div class="card-country">${p.country}</div>
+        <div class="card-year">Est. ${p.established}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-loc">📍 ${p.location}</div>
+        <div class="card-desc">${p.description}</div>
+        <div class="card-activities">
+          ${p.activities.map(a=>`<span class="act-chip">${p.actIcons[a]||'🌿'} ${a}</span>`).join('')}
+        </div>
+        <button class="card-btn">Explore this park →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showDetail(idx) {
+  const p = PARKS[idx];
+  const others = PARKS.filter((_,i)=>i!==idx).slice(0,3);
+  document.getElementById('list-view').style.display = 'none';
+  const dv = document.getElementById('detail-view');
+  dv.classList.add('active');
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-hero">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="detail-hero-overlay">
+        <div class="detail-hero-text">
+          <h1>${p.name}</h1>
+          <p>📍 ${p.location}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-stats">
+      <div class="d-stat"><span class="d-stat-val">${p.established}</span><span class="d-stat-lbl">Established</span></div>
+      <div class="d-stat"><span class="d-stat-val">${p.area}</span><span class="d-stat-lbl">Total Area</span></div>
+      <div class="d-stat"><span class="d-stat-val">${p.country}</span><span class="d-stat-lbl">Country</span></div>
+      <div class="d-stat"><span class="d-stat-val">${p.activities.length}</span><span class="d-stat-lbl">Activities</span></div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-main">
+        <div class="detail-card">
+          <h3>About this park</h3>
+          <p>${p.description}</p>
+        </div>
+
+        <div class="detail-card">
+          <h3>Did you know?</h3>
+          <div class="facts-list">
+            ${p.facts.map(f=>`<div class="fact-item"><div class="fact-icon">✦</div><div class="fact-text">${f}</div></div>`).join('')}
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3>Activities available</h3>
+          <div class="activities-grid">
+            ${p.activities.map(a=>`<div class="act-item"><span class="act-icon">${p.actIcons[a]||'🌿'}</span>${a.charAt(0).toUpperCase()+a.slice(1)}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-side">
+        <div class="ask-card">
+          <h3>Want to know more?</h3>
+          <p>Ask about best trails, visiting tips, wildlife, history and more about ${p.name.split(' ')[0]}.</p>
+          <a href="https://www.google.com/search?q=${encodeURIComponent(p.name + ' national park visit guide')}" target="_blank" style="text-decoration:none">
+            <button class="ask-btn">Search Google for more info →</button>
+          </a>
+        </div>
+
+        <div class="detail-card">
+          <h3>Explore more parks</h3>
+          <div class="related-list">
+            ${others.map((o,oi)=>`
+              <div class="related-item" onclick="showDetail(${PARKS.indexOf(o)})">
+                <img class="related-img" src="${o.thumb}" alt="${o.name}" loading="lazy">
+                <div>
+                  <div class="related-name">${o.name}</div>
+                  <div class="related-loc">📍 ${o.location}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showList() {
+  document.getElementById('list-view').style.display = 'block';
+  document.getElementById('detail-view').classList.remove('active');
+  document.getElementById('detail-content').innerHTML = '';
+  setTimeout(() => scrollToParks(), 100);
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+renderGrid(PARKS);
+</script>
+</body>
+</html>
