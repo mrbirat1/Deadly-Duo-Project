@@ -1,0 +1,187 @@
+{
+  "database": {
+    "name": "Parks and National Parks Explorer",
+    "version": "1.0",
+    "team": "Deadly Duo",
+    "last_updated": "2026-05-26",
+    "total_parks": 8
+  },
+  "parks": [
+    {
+      "id": 1,
+      "name": "Royal National Park",
+      "location": "New South Wales, Australia",
+      "country": "Australia",
+      "description": "The world's second oldest national park, featuring stunning coastal cliffs, rainforests, beaches, and the famous Coast Track walking trail.",
+      "activities": ["hiking", "camping", "sightseeing", "swimming", "cycling"],
+      "coordinates": {
+        "latitude": -34.1000,
+        "longitude": 151.0333
+      },
+      "area_km2": 15091,
+      "established": 1879,
+      "entrance_fee": {
+        "amount": 17.00,
+        "currency": "AUD",
+        "per": "vehicle per day"
+      },
+      "website": "https://www.nationalparks.nsw.gov.au/visit-a-park/parks/royal-national-park",
+      "unesco_world_heritage": false,
+      "best_time_to_visit": "September to November (Spring)"
+    },
+    {
+      "id": 2,
+      "name": "Blue Mountains National Park",
+      "location": "New South Wales, Australia",
+      "country": "Australia",
+      "description": "Famous for the iconic Three Sisters rock formation, dramatic eucalyptus-filled gorges, stunning waterfalls, and breathtaking valley views.",
+      "activities": ["hiking", "sightseeing", "camping", "rock climbing", "abseiling"],
+      "coordinates": {
+        "latitude": -33.7000,
+        "longitude": 150.3167
+      },
+      "area_km2": 267700,
+      "established": 1959,
+      "entrance_fee": {
+        "amount": 0.00,
+        "currency": "AUD",
+        "per": "free entry"
+      },
+      "website": "https://www.nationalparks.nsw.gov.au/visit-a-park/parks/blue-mountains-national-park",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "March to May (Autumn)"
+    },
+    {
+      "id": 3,
+      "name": "Yellowstone National Park",
+      "location": "Wyoming, USA",
+      "country": "United States",
+      "description": "America's first national park, home to more than 10,000 geothermal features including the famous Old Faithful geyser, hot springs, and diverse wildlife including bison and wolves.",
+      "activities": ["hiking", "camping", "sightseeing", "wildlife watching", "photography"],
+      "coordinates": {
+        "latitude": 44.4280,
+        "longitude": -110.5885
+      },
+      "area_km2": 898317,
+      "established": 1872,
+      "entrance_fee": {
+        "amount": 35.00,
+        "currency": "USD",
+        "per": "vehicle per 7 days"
+      },
+      "website": "https://www.nps.gov/yell/index.htm",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "April to May or September to October"
+    },
+    {
+      "id": 4,
+      "name": "Yosemite National Park",
+      "location": "California, USA",
+      "country": "United States",
+      "description": "Renowned for its towering granite cliffs, spectacular waterfalls including Yosemite Falls, giant ancient sequoias, and the iconic views of El Capitan and Half Dome.",
+      "activities": ["hiking", "camping", "rock climbing", "sightseeing", "photography", "skiing"],
+      "coordinates": {
+        "latitude": 37.8651,
+        "longitude": -119.5383
+      },
+      "area_km2": 308073,
+      "established": 1890,
+      "entrance_fee": {
+        "amount": 35.00,
+        "currency": "USD",
+        "per": "vehicle per 7 days"
+      },
+      "website": "https://www.nps.gov/yose/index.htm",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "May to September"
+    },
+    {
+      "id": 5,
+      "name": "Fiordland National Park",
+      "location": "South Island, New Zealand",
+      "country": "New Zealand",
+      "description": "Home to the breathtaking Milford Sound and Doubtful Sound, featuring dramatic fiords, ancient rainforests, rare flightless birds, and some of the world's finest wilderness walks.",
+      "activities": ["hiking", "kayaking", "sightseeing", "wildlife watching", "camping", "fishing"],
+      "coordinates": {
+        "latitude": -45.4153,
+        "longitude": 167.7191
+      },
+      "area_km2": 1260000,
+      "established": 1952,
+      "entrance_fee": {
+        "amount": 0.00,
+        "currency": "NZD",
+        "per": "free entry"
+      },
+      "website": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/fiordland/",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "December to February (Summer)"
+    },
+    {
+      "id": 6,
+      "name": "Banff National Park",
+      "location": "Alberta, Canada",
+      "country": "Canada",
+      "description": "Canada's oldest national park, featuring stunning turquoise glacial lakes, towering Rocky Mountain peaks, ancient glaciers, and the scenic Icefields Parkway.",
+      "activities": ["hiking", "camping", "skiing", "sightseeing", "wildlife watching", "kayaking"],
+      "coordinates": {
+        "latitude": 51.4968,
+        "longitude": -115.9281
+      },
+      "area_km2": 664100,
+      "established": 1885,
+      "entrance_fee": {
+        "amount": 10.50,
+        "currency": "CAD",
+        "per": "adult per day"
+      },
+      "website": "https://www.pc.gc.ca/en/pn-np/ab/banff",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "June to August or December to March (skiing)"
+    },
+    {
+      "id": 7,
+      "name": "Kakadu National Park",
+      "location": "Northern Territory, Australia",
+      "country": "Australia",
+      "description": "A UNESCO World Heritage site showcasing ancient Aboriginal rock art dating back over 20,000 years, diverse wetland ecosystems, spectacular waterfalls, and extraordinary wildlife.",
+      "activities": ["hiking", "sightseeing", "wildlife watching", "camping", "swimming", "cultural tours"],
+      "coordinates": {
+        "latitude": -12.9252,
+        "longitude": 132.4100
+      },
+      "area_km2": 1980400,
+      "established": 1979,
+      "entrance_fee": {
+        "amount": 40.00,
+        "currency": "AUD",
+        "per": "adult for 14 days"
+      },
+      "website": "https://www.parksaustralia.gov.au/kakadu/",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "May to October (Dry Season)"
+    },
+    {
+      "id": 8,
+      "name": "Grand Canyon National Park",
+      "location": "Arizona, USA",
+      "country": "United States",
+      "description": "One of the world's greatest natural wonders, carved by the Colorado River over millions of years. Stretches 446 km long, up to 29 km wide, and over 1.6 km deep.",
+      "activities": ["hiking", "sightseeing", "camping", "rafting", "photography", "mule rides"],
+      "coordinates": {
+        "latitude": 36.1069,
+        "longitude": -112.1129
+      },
+      "area_km2": 494077,
+      "established": 1919,
+      "entrance_fee": {
+        "amount": 35.00,
+        "currency": "USD",
+        "per": "vehicle per 7 days"
+      },
+      "website": "https://www.nps.gov/grca/index.htm",
+      "unesco_world_heritage": true,
+      "best_time_to_visit": "March to May or September to November"
+    }
+  ]
+}
